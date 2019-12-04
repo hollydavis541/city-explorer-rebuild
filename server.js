@@ -27,6 +27,15 @@ function Location(query, city){
 app.get('/location', getLocation);
 
 // Route Handlers
-// getLocation function
+function getLocation(request,response) {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+  return superagent.get(url)
+    .then( data => {
+      const location = new Location(request.query.data, data.body.results[0]);
+      console.log(location);
+      response.status(200).json(location);
+    })
+//add catch
+}
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
