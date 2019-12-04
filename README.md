@@ -20,6 +20,12 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 ## Change Log
 
+12-03-2019 09:30 PM - initial file structure created, packages installed, dependencies and initial setup in server.js
+
+12-03-2019 10:00 PM - created Location constructor and route
+
+12-03-2019 11:00 PM - created getLocation function that calls Google API and renders location on front end's map (sets image placeholder source to API's URL)
+
 12-03-2019 ______ AM - placeholder
 
 ## Credits and Collaborations
