@@ -1,0 +1,28 @@
+{
+  "name": "city-explorer-rebuild",
+  "version": "1.0.0",
+  "description": "**Author**: Holly Davis   **Version**: 1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hollydavis541/city-explorer-rebuild.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hollydavis541/city-explorer-rebuild/issues"
+  },
+  "homepage": "https://github.com/hollydavis541/city-explorer-rebuild#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "pg": "^7.14.0",
+    "superagent": "^5.1.2"
+  }
+}
