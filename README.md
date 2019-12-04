@@ -20,6 +20,8 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 ## Change Log
 
+12-03-2019 09:30 PM - initial file structure created, packages installed, dependencies and initial setup in server.js
+
 12-03-2019 ______ AM - placeholder
 
 ## Credits and Collaborations
