@@ -29,9 +29,19 @@ function Weather(day) {
   this.created_at = Date.now();
 }
 
+function Yelp(review) {
+  this.name = review.name;
+  this.rating = review.rating;
+  this.price = review.price;
+  this.url = review.url;
+  this.image_url = review.image_url;
+  this.created_at = Date.now();
+}
+
 // Routes
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
+app.get('/yelp', getYelp);
 
 // Route Handlers
 function getLocation(request,response) {
@@ -54,6 +64,19 @@ function getWeather(request, response) {
       response.status(200).json(weather);
     })
     .catch( () => errorHandler('No weather information available', request, response));
+}
+
+function getYelp(request, response) {
+  const url = `https://api.yelp.com/v3/businesses/search?latitude=${request.query.data.latitude}&longitude=${request.query.data.longitude}`;
+  return superagent.get(url)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then( data => {
+      const eateries = data.body.businesses.map(eats => {
+        return new Yelp(eats);
+      });
+      response.status(200).json(eateries);
+    })
+    .catch( () => errorHandler('No restaurant information available', request, response));
 }
 
 // Error Handler
