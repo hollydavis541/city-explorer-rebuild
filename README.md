@@ -32,7 +32,9 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 12-04-2019 10:20 PM - created Yelp constructor, route, and getYelp function
 
-12-04-2019 11:00 PM - created movies constructor, route, and getMovies function
+12-04-2019 11:00 PM - created Movie constructor, route, and getMovies function
+
+12-04-2019 11:10 PM - created Trail constructor, route, and getTrails function
 
 12-03-2019 ______ AM - placeholder
 

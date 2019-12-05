@@ -46,7 +46,7 @@ function Movies(movie) {
   this.image_url = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
   this.popularity = movie.popularity;
   this.released_on = movie.release_date;
-  this.created_on = Date.now();
+  this.created_at = Date.now();
 }
 
 function Trail(trail) {
@@ -108,7 +108,6 @@ function getYelp(request, response) {
 
 function getMovies(request, response) {
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${request.query.data.search_query}`;
-  console.log(url);
   return superagent.get(url)
     .then( data => {
       const movies = data.body.results.map(movie => {
