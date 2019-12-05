@@ -38,10 +38,22 @@ function Yelp(review) {
   this.created_at = Date.now();
 }
 
+function Movies(movie) {
+  this.title = movie.title;
+  this.overview = movie.overview;
+  this.average_votes = movie.vote_average;
+  this.total_votes = movie.vote_count;
+  this.image_url = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+  this.popularity = movie.popularity;
+  this.released_on = movie.release_date;
+  this.created_on = Date.now();
+}
+
 // Routes
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
 app.get('/yelp', getYelp);
+app.get('/movies', getMovies);
 
 // Route Handlers
 function getLocation(request,response) {
@@ -71,12 +83,25 @@ function getYelp(request, response) {
   return superagent.get(url)
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then( data => {
-      const eateries = data.body.businesses.map(eats => {
-        return new Yelp(eats);
+      const eateries = data.body.businesses.map(eatery => {
+        return new Yelp(eatery);
       });
       response.status(200).json(eateries);
     })
     .catch( () => errorHandler('No restaurant information available', request, response));
+}
+
+function getMovies(request, response) {
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${request.query.data.search_query}`;
+  console.log(url);
+  return superagent.get(url)
+    .then( data => {
+      const movies = data.body.results.map(movie => {
+        return new Movies(movie);
+      });
+      response.status(200).json(movies);
+    })
+    .catch( () => errorHandler('No movie information available', request, response));
 }
 
 // Error Handler
