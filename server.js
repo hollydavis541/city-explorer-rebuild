@@ -17,14 +17,21 @@ client.on('err', err => console.error(err));
 // Constructors
 function Location(query, city){
   this.search_query = query;
-  this.address = city.formatted_address;
+  this.formatted_query = city.formatted_address;
   this.latitude = city.geometry.location.lat;
   this.longitude = city.geometry.location.lng;
   this.created_at = Date.now(); // will need this for cache invalidation once database setup
 }
 
+function Weather(day) {
+  this.forecast = day.summary;
+  this.time = new Date(day.time * 1000).toString().slice(0,15);
+  this.created_at = Date.now();
+}
+
 // Routes
 app.get('/location', getLocation);
+app.get('/weather', getWeather);
 
 // Route Handlers
 function getLocation(request,response) {
@@ -32,10 +39,21 @@ function getLocation(request,response) {
   return superagent.get(url)
     .then( data => {
       const location = new Location(request.query.data, data.body.results[0]);
-      console.log(location);
       response.status(200).json(location);
     })
     .catch( () => errorHandler('Not a valid location', request, response));
+}
+
+function getWeather(request, response) {
+  const url = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${request.query.data.latitude},${request.query.data.longitude}`;
+  return superagent.get(url)
+    .then( data => {
+      const weather = data.body.daily.data.map(day => {
+        return new Weather(day);
+      });
+      response.status(200).json(weather);
+    })
+    .catch( () => errorHandler('No weather information available', request, response));
 }
 
 // Error Handler

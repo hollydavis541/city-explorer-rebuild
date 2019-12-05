@@ -26,6 +26,10 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 12-03-2019 11:00 PM - created getLocation function that calls Google API and renders location on front end's map (sets image placeholder source to API's URL)
 
+12-04-2019 07:30 pM - added error handler function
+
+12-04-2019 08:00 PM - created Weather constructor, route, and getWeather function
+
 12-03-2019 ______ AM - placeholder
 
 ## Credits and Collaborations
