@@ -49,11 +49,26 @@ function Movies(movie) {
   this.created_on = Date.now();
 }
 
+function Trail(trail) {
+  this.name = trail.name;
+  this.location = trail.location;
+  this.length = trail.length;
+  this.stars = trail.stars;
+  this.star_votes = trail.starVotes;
+  this.summary = trail.summary;
+  this.trail_url = trail.url;
+  this.conditions = trail.conditionStatus;
+  this.condition_date = trail.conditionDate;
+  this.condition_time = trail.conditionDate;
+  this.created_at = Date.now();
+}
+
 // Routes
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
 app.get('/yelp', getYelp);
 app.get('/movies', getMovies);
+app.get('/trails', getTrails);
 
 // Route Handlers
 function getLocation(request,response) {
@@ -102,6 +117,18 @@ function getMovies(request, response) {
       response.status(200).json(movies);
     })
     .catch( () => errorHandler('No movie information available', request, response));
+}
+
+function getTrails(request, response) {
+  const url = `https://www.hikingproject.com/data/get-trails?lat=${request.query.data.latitude}&lon=${request.query.data.longitude}&key=${process.env.TRAIL_API_KEY}`
+  return superagent.get(url)
+    .then( data => {
+      const trails = data.body.trails.map(trail => {
+        return new Trail(trail);
+      });
+      response.status(200).json(trails);
+    })
+    .catch( () => errorHandler('No trail information available', request, response));
 }
 
 // Error Handler
