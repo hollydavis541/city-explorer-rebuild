@@ -67,6 +67,7 @@ function Trail(trail) {
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
 app.get('/yelp', getYelp);
+app.get('/events', getEvents);
 app.get('/movies', getMovies);
 app.get('/trails', getTrails);
 
@@ -90,7 +91,10 @@ function getWeather(request, response) {
       });
       response.status(200).json(weather);
     })
-    .catch( () => errorHandler('No weather information available', request, response));
+    .catch(() => {
+      let errorMessage = 'No weather information available';
+      errorHandler(errorMessage, request, response);
+    });
 }
 
 function getYelp(request, response) {
@@ -103,7 +107,19 @@ function getYelp(request, response) {
       });
       response.status(200).json(eateries);
     })
-    .catch( () => errorHandler('No restaurant information available', request, response));
+    .catch(() => {
+      let errorMessage = 'No restaurant information available';
+      errorHandler(errorMessage, request, response);
+    });
+}
+
+function getEvents(request, response) {
+  const url = 'placeholder';
+  return superagent.get(url)
+    .catch(() => {
+      let errorMessage = 'No events information available';
+      errorHandler(errorMessage, request, response);
+    });
 }
 
 function getMovies(request, response) {
@@ -115,7 +131,10 @@ function getMovies(request, response) {
       });
       response.status(200).json(movies);
     })
-    .catch( () => errorHandler('No movie information available', request, response));
+    .catch(() => {
+      let errorMessage = 'No movie information available';
+      errorHandler(errorMessage, request, response);
+    });
 }
 
 function getTrails(request, response) {
@@ -127,12 +146,19 @@ function getTrails(request, response) {
       });
       response.status(200).json(trails);
     })
-    .catch( () => errorHandler('No trail information available', request, response));
+    .catch(() => {
+      let errorMessage = 'No trail information available';
+      errorHandler(errorMessage, request, response);
+    });
 }
 
 // Error Handler
-function errorHandler(error, request, response) {
-  response.status(500).send(console.error(error));
+function errorHandler(message, request, response) {
+  let errorObject = {
+    status: 500,
+    responseText: message
+  };
+  response.status(errorObject.status).send(errorObject.responseText).send(console.log(errorObject));
 }
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
