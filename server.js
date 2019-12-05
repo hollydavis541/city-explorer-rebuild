@@ -35,7 +35,12 @@ function getLocation(request,response) {
       console.log(location);
       response.status(200).json(location);
     })
-//add catch
+    .catch( () => errorHandler('Not a valid location', request, response));
+}
+
+// Error Handler
+function errorHandler(error, request, response) {
+  response.status(500).send(console.error(error));
 }
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
