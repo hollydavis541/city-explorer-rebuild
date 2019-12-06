@@ -19,10 +19,25 @@ Location.getLocation = (request,response) => {
   return superagent.get(url)
     .then( data => {
       const location = new Location(request.query.data, data.body.results[0]);
-      response.status(200).json(location);
+      return location.save()
+        .then( result => {
+          location.id = result.rows[0].id;
+          response.status(200).json(location);
+        })
+        .catch( () => Error('Not a valid location', request, response));
     })
-    .catch( () => Error('Not a valid location', request, response));
 }
+
+// Save to Database
+Location.prototype.save = function() {
+  const SQL = `INSERT INTO locations
+  (search_query, formatted_query, latitude, longitude, created_at)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING *`;
+
+  let values = Object.values(this);
+  return client.query(SQL, values);
+};
 
 client.connect();
 
