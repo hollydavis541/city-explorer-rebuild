@@ -20,9 +20,9 @@ CREATE TABLE weather (
 CREATE TABLE yelp (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
-    url VARCHAR(255),
-    price CHAR(5),
     rating NUMERIC(2,1),
+    price CHAR(5),
+    url VARCHAR(255),
     image_url VARCHAR(255),
     created_at BIGINT,
     location_id INTEGER NOT NULL REFERENCES locations(id)

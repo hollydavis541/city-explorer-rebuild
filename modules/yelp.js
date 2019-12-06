@@ -21,7 +21,9 @@ Yelp.getYelp = (request, response) => {
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then( data => {
       const eateries = data.body.businesses.map(eatery => {
-        return new Yelp(eatery);
+        const info = new Yelp(eatery);
+        info.save(request.query.data.id);
+        return info
       });
       response.status(200).json(eateries);
     })
@@ -30,6 +32,18 @@ Yelp.getYelp = (request, response) => {
       Error(errorMessage, request, response);
     });
 }
+
+// Save to Database
+Yelp.prototype.save = function(id){
+  let SQL = `INSERT INTO yelp
+    (name, rating, price, url, image_url, created_at, location_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING id;`;
+
+  let values = Object.values(this);
+  values.push(id);
+  return client.query(SQL, values);
+};
 
 client.connect();
 
