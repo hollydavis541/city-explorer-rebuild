@@ -25,7 +25,9 @@ Trail.getTrails = (request, response) => {
   return superagent.get(url)
     .then( data => {
       const trails = data.body.trails.map(trail => {
-        return new Trail(trail);
+        const info = new Trail(trail);
+        info.save(request.query.data.id);
+        return info
       });
       response.status(200).json(trails);
     })
@@ -34,6 +36,18 @@ Trail.getTrails = (request, response) => {
       Error(errorMessage, request, response);
     });
 }
+
+// Save to Database
+Trail.prototype.save = function(id){
+  let SQL = `INSERT INTO trails
+    (name, location, length, stars, star_votes, summary, trail_url, conditions, condition_date, condition_time, created_at, location_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    RETURNING id;`;
+
+  let values = Object.values(this);
+  values.push(id);
+  return client.query(SQL, values);
+};
 
 client.connect();
 
