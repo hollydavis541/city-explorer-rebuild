@@ -51,8 +51,8 @@ CREATE TABLE trails (
     summary VARCHAR(255),
     trail_url VARCHAR(255),
     conditions TEXT,
-    condition_date CHAR(10),
-    condition_time CHAR(8),
+    condition_date VARCHAR(255),
+    condition_time VARCHAR(255),
     created_at BIGINT,
     location_id INTEGER NOT NULL REFERENCES locations(id)
   );
