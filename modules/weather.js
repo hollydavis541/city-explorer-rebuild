@@ -17,7 +17,9 @@ Weather.getWeather = (request, response) => {
   return superagent.get(url)
     .then( data => {
       const weather = data.body.daily.data.map(day => {
-        return new Weather(day);
+        const summary = new Weather(day);
+        summary.save(request.query.data.id);
+        return summary
       });
       response.status(200).json(weather);
     })
@@ -26,6 +28,18 @@ Weather.getWeather = (request, response) => {
       Error(errorMessage, request, response);
     });
 }
+
+// Save to Database
+Weather.prototype.save = function(id){
+  let SQL = `INSERT INTO weather
+    (forecast, time, created_at, location_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id;`;
+
+  let values = Object.values(this);
+  values.push(id);
+  return client.query(SQL, values);
+};
 
 client.connect();
 
