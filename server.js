@@ -161,4 +161,9 @@ function errorHandler(message, request, response) {
   response.status(errorObject.status).send(errorObject.responseText).send(console.log(errorObject));
 }
 
-app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+client.connect()
+  .then( ()=> {
+    app.listen(PORT, ()=> {
+      console.log('server and db are up, listening on port', PORT);
+    });
+  });
