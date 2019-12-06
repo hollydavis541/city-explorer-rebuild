@@ -17,9 +17,9 @@ Weather.getWeather = (request, response) => {
   return superagent.get(url)
     .then( data => {
       const weather = data.body.daily.data.map(day => {
-        const summary = new Weather(day);
-        summary.save(request.query.data.id);
-        return summary
+        const info = new Weather(day);
+        info.save(request.query.data.id);
+        return info
       });
       response.status(200).json(weather);
     })
