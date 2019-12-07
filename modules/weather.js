@@ -74,7 +74,7 @@ Weather.getWeather = (request,response) => {
   const weatherHandler = {
     query: request.query.data,
     cacheHit: (results) => {
-      response.send(results.rows[0]);
+      response.send(results.rows);
     },
     cacheMiss: () => {
       Weather.fetchWeather(request, response)
