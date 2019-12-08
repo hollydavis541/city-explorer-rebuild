@@ -26,7 +26,7 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 12-03-2019 11:00 PM - created getLocation function that calls Google API and renders location on front end's map (sets image placeholder source to API's URL)
 
-12-04-2019 07:30 pM - added error handler function
+12-04-2019 07:30 PM - added error handler function
 
 12-04-2019 08:00 PM - created Weather constructor, route, and getWeather function
 
@@ -36,6 +36,10 @@ This is a Node.js server that uses express, dotenv, cors, pg, and superagent pac
 
 12-04-2019 11:10 PM - created Trail constructor, route, and getTrails function
 
-12-03-2019 ______ AM - placeholder
+12-05-2019 11:40 PM - added tables to schema, created modules for each API and error function, added save functions for each API
+
+12-06-2019 04:00 PM - fixed trails saving issue; added location lookup and cache result functions
+
+12-07-2019 05:00 PM - added lookup and callback functions for APIs
 
 ## Credits and Collaborations
