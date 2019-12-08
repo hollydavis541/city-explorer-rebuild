@@ -58,15 +58,15 @@ Yelp.lookup = (handler) => {
   return client.query(SQL, values)
     .then( results => {
       if(results.rowCount > 0 && (Date.now() - (results.rows[0].created_at)) < 86400000){ // data under a day
-        console.log('Got Yelp data from DB');
+        console.log('Got restaurant data from DB');
         handler.cacheHit(results);
       } else if (results.rowCount > 0 && (Date.now() - (results.rows[0].created_at)) >= 86400000) { // data a day or older
-        console.log('Yelp info too old, fetching new info from API');
+        console.log('Restaurant info too old, fetching new info from API');
         const sqlDelete = `DELETE FROM yelp WHERE location_id=${[handler.query.id]}`;
         client.query(sqlDelete);
         handler.cacheMiss();
       } else {
-        console.log('No Yelp data in DB, fetching...');
+        console.log('No restaurant data in DB, fetching...');
         handler.cacheMiss();
       }
     })
