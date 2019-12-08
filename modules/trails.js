@@ -1,11 +1,16 @@
+'use strict';
+
+// Dependencies
 require('dotenv').config();
 const superagent = require('superagent');
 const pg = require('pg');
 const Error = require('./error');
 
+// Setup
 const client = new pg.Client(process.env.DATABASE_URL);
 client.on('err', err => console.error(err));
 
+// Constructor
 function Trail(trail) {
   this.name = trail.name;
   this.location = trail.location;
@@ -20,7 +25,8 @@ function Trail(trail) {
   this.created_at = Date.now();
 }
 
-Trail.getTrails = (request, response) => {
+// Get trails from API
+Trail.fetchTrails = (request, response) => {
   const url = `https://www.hikingproject.com/data/get-trails?lat=${request.query.data.latitude}&lon=${request.query.data.longitude}&key=${process.env.TRAIL_API_KEY}`
   return superagent.get(url)
     .then( data => {
@@ -48,6 +54,43 @@ Trail.prototype.save = function(id){
   values.push(id);
   return client.query(SQL, values);
 };
+
+// Check Database
+Trail.lookup = (handler) => {
+  const SQL = 'SELECT * FROM trails WHERE location_id=$1;';
+  const values = [handler.query.id];
+  return client.query(SQL, values)
+    .then( results => {
+      if(results.rowCount > 0 && (Date.now() - (results.rows[0].created_at)) < 86400000){ // data under a day old
+        console.log('Got trail data from DB');
+        handler.cacheHit(results);
+      } else if (results.rowCount > 0 && (Date.now() - (results.rows[0].created_at)) >= 86400000) { // data a day or older
+        console.log('Trails info too old, fetching new info from API');
+        const sqlDelete = `DELETE FROM trails WHERE location_id=${[handler.query.id]}`;
+        client.query(sqlDelete);
+        handler.cacheMiss();
+      } else {
+        console.log('No trails data in DB, fetching...');
+        handler.cacheMiss();
+      }
+    })
+    .catch(console.error);
+};
+
+// Route Callback
+Trail.getTrails = (request,response) => {
+  const trailHandler = {
+    query: request.query.data,
+    cacheHit: (results) => {
+      response.send(results.rows);
+    },
+    cacheMiss: () => {
+      Trail.fetchTrails(request, response)
+        .then( data => response.send(data));
+    }
+  };
+  Trail.lookup(trailHandler);
+}
 
 client.connect();
 
